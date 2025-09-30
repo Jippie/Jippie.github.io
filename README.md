@@ -2,4 +2,4 @@
 This is my site
 # To Do
 
-[ ] Make a index.html
+- [ ] Make a index.html
