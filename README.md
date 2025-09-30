@@ -1,2 +1,5 @@
 # Jippie.github.io
-my site
+This is my site
+# To Do
+
+[]make a index.html
