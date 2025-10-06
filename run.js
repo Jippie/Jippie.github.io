@@ -1,22 +1,11 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
-const PORT = 3000;
 
-http.createServer((req, res) => {
-    // Pad naar je index.html
-    const filePath = path.join(__dirname, "./index.html");
+app.use(express.static(__dirname));
 
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            res.writeHead(500, { "Content-Type": "text/plain" });
-            res.end("Error loading index.html");
-        } else {
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(data);
-        }
-    });
-}).listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+http.listen(3000, "0.0.0.0", () => {
+    console.log('Server is active on http://localhost:3000');
 });
