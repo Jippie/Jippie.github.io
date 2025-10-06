@@ -1,22 +1,62 @@
 <!DOCTYPE html>
+
 <head>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap');
-        body{
+
+        body {
             background-color: rgb(0, 41, 3);
         }
-        #buiten{
+
+        #entergrid {
+            display: grid;
+            place-items: center;
+            height: 90vh;
+        }
+
+        #enter {
+            /* Style zelf maar */
+            width: 200px;
+            height: 75px;
+            transition: 1s ease-in-out;
+        }
+
+        #enter:hover {
+            scale: 1.2;
+        }
+
+        .page {
+            display: none;
+        }
+
+        #buiten {
             font-family: Fredericka the Great;
             color: #00961bbb;
             font-size: 300%;
         }
     </style>
 </head>
+
 <body>
-    <div id="buiten">GET OUT OF MY SWAMP!!</div>
-    <img id="shrek" src="https://github.com/polewolf/swamp/blob/main/shrek.jpg?raw=true">
+    <div id="entergrid">
+        <button id="enter">ENTER</button>
+    </div>
+    <div id="buiten" class="page">GET OUT OF MY SWAMP!!</div>
+    <img id="shrek" class="page" src="https://github.com/polewolf/swamp/blob/main/shrek.jpg?raw=true">
     <script>
-        const audio = new Audio('https://github.com/polewolf/swamp/raw/refs/heads/main/what-are-you-doing-in-my-swamp.mp3'); // Vervang dit met het pad naar jouw geluidsbestand
-        audio.play();
+        const entergrid = document.getElementById("entergrid")
+        const enter = document.getElementById("enter")
+        const page = document.querySelectorAll(".page")
+        const audio = new Audio('https://github.com/polewolf/swamp/raw/refs/heads/main/what-are-you-doing-in-my-swamp.mp3');
+
+        enter.addEventListener("click", () => {
+            audio.play();
+            entergrid.style.display = "none"
+            page.forEach((i) => {
+                i.style.display = "block"
+            })
+            
+        })
+        
     </script>
 </body>
