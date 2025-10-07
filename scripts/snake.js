@@ -6,6 +6,7 @@ const scoreElement = document.getElementById("score")
 const gridSize = 17.5; // Grootte van elk blok
 const canvasSize = 350; // Canvas breedte/hoogte
 const gridCount = canvasSize / gridSize;
+console.log(gridCount)
     
 // Slang en voedsel
 let snake = [{ x: 10, y: 10 }]; // Startpositie van de slang
