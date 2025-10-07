@@ -21,7 +21,7 @@ app.get(`/${snake}`, (req, res) => {
 });*/
 
 app.get('/:page', (req, res) => {
-    const page = req.params.page; // Dit is wat er na de slash in de URL staat
+    const page = req.params.page;
     res.sendFile(`${__dirname}/${page}.html`);
 });
 
