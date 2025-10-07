@@ -2,7 +2,7 @@
 This is my site
 # To Do
 
-- [ ]  Make index.html
+- [x]  Make index.html
 
 <details>
   <summary>Open me</summary>
