@@ -1,0 +1,33 @@
+<html>
+
+<head></head>
+
+<body>
+
+
+    <button>click</button>
+
+    <script>
+        const button = document.querySelector("button")
+
+        function sendNotification() {
+
+            var notification = new Notification("Notification", {
+                body: "hi",
+            })
+            notification.addEventListener("close", sendNotification)
+
+        }
+        Notification.requestPermission().then(perm => {
+            sendNotification()
+        })
+        
+        button.addEventListener("click", () => {
+            sendNotification()
+        })
+    </script>
+
+
+</body>
+
+</html>
