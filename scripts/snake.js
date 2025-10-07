@@ -4,7 +4,7 @@ const scoreElement = document.getElementById("score")
     
 // Game instellingen
 const gridSize = 17.5; // Grootte van elk blok
-const canvasSize = 350; // Canvas breedte/hoogte
+const canvasSize = 525; // Canvas breedte/hoogte
 const gridCount = canvasSize / gridSize;
 console.log(gridCount)
     
