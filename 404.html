@@ -27,8 +27,28 @@
             margin:0 0 8px;
         }
         @media (max-width:480px){ .card-title{ font-size:36px } }
+
         /* zorg dat de waarschuwing zichtbaar is op deze pagina */
         #warning { display:block; margin-top:18px; font-size:13px; color:rgb(255,0,0); font-weight:normal; text-align:right; }
+
+        /* Dino-wrapper buiten de kaart en gecentreerd */
+        .dino-wrapper {
+            margin: 1.5rem auto;
+            max-width: 900px;
+            width: calc(100% - 2rem);
+            height: 420px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000; /* optioneel, ruimte rond iframe */
+        }
+        .dino-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            position: static;
+        }
     </style>
 </head>
 <body>
@@ -43,12 +63,11 @@
             <a class="secondary" href="javascript:history.back()">Go back</a>
         </p>
         <p id="warning">If you reached this page from an external link, the URL may be outdated.</p>
-
-        <!-- toegevoegde iframe: Chrome Dino -->
-        <div class="dino-wrapper" style="position:relative; height:400px; margin-top:1rem;">
-            <iframe src="https://chromedino.com/" frameborder="0" scrolling="no" width="100%" height="100%" loading="lazy"></iframe>
-        </div>
-        <style type="text/css">iframe { position: absolute; width: 100%; height: 100%; z-index: 999; }</style>
     </main>
+
+    <!-- Dino-iframe staat nu buiten de main en is gecentreerd -->
+    <div class="dino-wrapper">
+        <iframe src="https://chromedino.com/" frameborder="0" scrolling="no" loading="lazy"></iframe>
+    </div>
 </body>
 </html>
