@@ -77,6 +77,12 @@ function drawGame() {
     pending = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    for (y = 0; y < gridCount; y++) {
+        for (x = 0; x < gridCount; x++) {
+            if (y % 2 == x % 2) drawBox(x, y, "black");
+        }
+    }
+
     // Teken voedsel
     drawBox(food.x, food.y, "red");
     
