@@ -79,7 +79,7 @@ function drawGame() {
     
     for (y = 0; y < gridCount; y++) {
         for (x = 0; x < gridCount; x++) {
-            if (y % 2 == x % 2) drawBox(x, y, "black");
+            if (y % 2 == x % 2) drawBox(x, y, "#105010");
         }
     }
 
