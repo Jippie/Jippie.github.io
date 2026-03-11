@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #000000;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+header {
+    background: #1d3067;
+    color: #fff;
+    padding: 2rem 0;
+}
+
+main {
+    color: #ffffff;
+    margin: 2rem auto;
+    max-width: 600px;
+    background: #1d3067;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+main a {
+    color: #4b72ff;
+    text-decoration: none;
+    transition: all 0.5s ease;
+}
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+footer a {
+    margin: 0;
+    color: #ffffff;
+}
+footer img {
+  width: 40px;
+  height: auto;
+}
+footer {
+  display: flex;
+  align-items: center;
+}
