@@ -6,16 +6,50 @@ body {
     text-align: center;
 }
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto; /* neemt resterende ruimte zodat footer naar beneden gedrukt wordt */
+}
+
 header {
     background: #1d3067;
     color: #fff;
     padding: 2rem 0;
 }
-
+header a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+header button {
+    background: #6f6f6f86;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: background 0.3s ease;
+    border: 1px solid #000000;
+}
+header button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
 main {
     color: #ffffff;
     margin: 2rem auto;
-    max-width: 600px;
+    min-width: 50vw; /* zorg dat main minstens de helft van het scherm is in de breedte */
+    max-width: 900px; /* vergroot eventueel zodat min-width kan werken op brede schermen */
     background: #1d3067;
     padding: 2rem;
     border-radius: 8px;
@@ -26,6 +60,10 @@ main a {
     text-decoration: none;
     transition: all 0.5s ease;
 }
+main p {
+    margin: 1rem 0;
+    line-height: 1.5;
+}
 footer {
     display: flex;
     align-items: center;
@@ -34,7 +72,6 @@ footer {
     margin-top: 2rem;
 }
 footer a {
-    margin: 0;
     color: #ffffff;
 }
 footer img {
@@ -44,4 +81,9 @@ footer img {
 footer {
   display: flex;
   align-items: center;
+}
+footer {
+    margin-top: 0;   /* let op: verwijder eerdere top-margin die was toegevoegd */
+    flex-shrink: 0;
+    width: 100%;
 }
