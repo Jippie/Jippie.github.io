@@ -48,7 +48,7 @@ header button:hover {
 main {
     color: #ffffff;
     margin: 2rem auto;
-    min-width: 50vw; /* zorg dat main minstens de helft van het scherm is in de breedte */
+    min-width: 500px; /* zorg dat main minstens de helft van het scherm is in de breedte */
     max-width: 900px; /* vergroot eventueel zodat min-width kan werken op brede schermen */
     background: #1d3067;
     padding: 2rem;
@@ -56,13 +56,33 @@ main {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 main a {
-    color: #4b72ff;
+    color: #ffffff;
     text-decoration: none;
     transition: all 0.5s ease;
+}
+main button {
+    background: #4b72ff;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+main button:hover {
+    background: #3a5bbf;
 }
 main p {
     margin: 1rem 0;
     line-height: 1.5;
+}
+main #silvijf {
+    display: inline-block;
+    margin-top: 1rem;
+    transition: transform 0.5s ease;
+}
+main #silvijf:hover {
+    transform: scale(1.05);
 }
 footer {
     display: flex;
