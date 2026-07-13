@@ -16,10 +16,16 @@
 
     <h1 id="titel">Snake Game</h1>
 
-    <canvas id="gameCanvas" width="525" height="525"></canvas>
-    <p id="score">Score: 0</p>
+    <div id="gameArea">
+        <div id="scorePanel">
+            <p id="score">Score: 0</p>
+            <p id="highScore">High score: 0</p>
+            <div id="instructies">Use the arrow keys to <br>control the snake</div>
+        </div>
+        <canvas id="gameCanvas" width="525" height="525"></canvas>
+    </div>
 
-    <div id="instructies">Gebruik de pijltjestoetsen om de slang te besturen.</div>
+    
 
     <script src="scripts/snake.js">
 </script>

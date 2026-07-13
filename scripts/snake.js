@@ -1,13 +1,21 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const scoreElement = document.getElementById("score")
+const scoreElement = document.getElementById("score");
+const highScoreElement = document.getElementById("highScore");
+
+const highScoreKey = "snakeHighScore";
+let highScore = Number(localStorage.getItem(highScoreKey)) || 0;
+
+function updateScoreDisplay() {
+    scoreElement.innerHTML = "Score: " + score;
+    highScoreElement.innerHTML = "High score: " + highScore;
+}
     
 // Game instellingen
 const gridSize = 17.5; // Grootte van elk blok
 const canvasSize = 525; // Canvas breedte/hoogte
 const gridCount = canvasSize / gridSize;
-console.log(gridCount)
-    
+
 // Slang en voedsel
 let snake = [{ x: 10, y: 10 }]; // Startpositie van de slang
 let food = spawnFood();
@@ -16,6 +24,8 @@ let score = 0;
     
 // Game status
 let gameStarted = false; // Wacht op eerste beweging
+let gameOverMessage = "";
+let gameOverTimer = null;
     
 var pending = false;
     
@@ -47,14 +57,28 @@ function updateGame() {
         head.y >= gridCount ||
         snake.some(segment => segment.x === head.x && segment.y === head.y)
     ) {
-        alert(`Game Over! Je score is: ${score}`);
-        resetGame();
+        gameOverMessage = `Game over! Your score is ${score}`;
+        gameStarted = false;
+        direction = { x: 0, y: 0 };
+        pending = false;
+
+        if (gameOverTimer) {
+            clearTimeout(gameOverTimer);
+        }
+
+        gameOverTimer = setTimeout(() => {
+            resetGame();
+        }, 1500);
         return;
     }
     
     // Controleer of de slang voedsel eet
     if (head.x === food.x && head.y === food.y) {
         score++;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem(highScoreKey, highScore);
+        }
         food = spawnFood();
     } else {
         snake.pop(); // Verwijder de staart
@@ -65,11 +89,19 @@ function updateGame() {
     
 // Reset het spel na Game Over
 function resetGame() {
+    if (gameOverTimer) {
+        clearTimeout(gameOverTimer);
+        gameOverTimer = null;
+    }
+
     snake = [{ x: 10, y: 10 }];
     food = spawnFood();
     direction = { x: 0, y: 0 };
     score = 0;
     gameStarted = false; // Wacht opnieuw op eerste beweging
+    gameOverMessage = "";
+    pending = false;
+    updateScoreDisplay();
 }
     
 // Teken het speelveld
@@ -88,6 +120,16 @@ function drawGame() {
     
     // Teken slang
     snake.forEach(segment => drawBox(segment.x, segment.y, "green"));
+
+    if (gameOverMessage) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "24px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(gameOverMessage, canvas.width / 2, canvas.height / 2);
+    }
 }
     
 // Besturing van de slang
@@ -117,9 +159,11 @@ document.addEventListener("keydown", event => {
 function gameLoop() {
     updateGame();
     drawGame();
+    updateScoreDisplay();
     setTimeout(gameLoop, 100); // Stel snelheid in
-    scoreElement.innerHTML = "Score: " + score
 }
-    
+
+updateScoreDisplay();
+
 // Start de game loop
 gameLoop();
