@@ -96,3 +96,6 @@ main a:hover {
     background-color: #1111aa;
     transform: scale(1.05);
 }
+#friendsite {
+    margin-top: 15px;
+}
