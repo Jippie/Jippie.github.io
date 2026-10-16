@@ -7,6 +7,7 @@ let dark = localStorage.getItem("dark") !== "false";
 function updateClock() {
     clock.textContent = new Date().toLocaleTimeString("nl-NL");
 }
+
 function updateTheme() {
     document.body.style.backgroundColor = dark ? "black" : "white";
     document.body.style.color = dark ? "white" : "black";
