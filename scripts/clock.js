@@ -4,7 +4,7 @@ const themeIcon = document.getElementById("theme-icon");
 const fullscreenButton = document.getElementById("fullscreen");
 const fullscreenIcon = document.getElementById("fullscreen-icon");
 const fontButton = document.getElementById("font");
-const fonts = ["monospace", "sans-serif", "serif"];
+const fonts = ["monospace", "sans-serif", "serif", "courier", "arial", "verdana", "georgia", "helvetica", "tahoma", "trebuchet ms"];
 
 let dark = localStorage.getItem("dark") !== "false";
 let backgroundIndex = Number(localStorage.getItem("backgroundIndex")) || 0;
