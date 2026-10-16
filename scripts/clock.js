@@ -1,4 +1,5 @@
 const clock = document.getElementById("clock");
+const pageTitle = document.title;
 const darkswitch = document.getElementById("dark-light");
 const themeIcon = document.getElementById("theme-icon");
 const fullscreenButton = document.getElementById("fullscreen");
@@ -23,6 +24,7 @@ const themes = {
 
 function updateClock() {
     clock.textContent = new Date().toLocaleTimeString("nl-NL");
+    document.title = `${clock.textContent} | ${pageTitle}`;
 }
 
 function updateTheme() {
