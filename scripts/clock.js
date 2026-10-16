@@ -1,6 +1,8 @@
 const clock = document.getElementById("clock");
 const darkswitch = document.getElementById("dark-light");
 const themeIcon = document.getElementById("theme-icon");
+const fullscreenButton = document.getElementById("fullscreen");
+const fullscreenIcon = document.getElementById("fullscreen-icon");
 
 let dark = localStorage.getItem("dark") !== "false";
 let backgroundIndex = Number(localStorage.getItem("backgroundIndex")) || 0;
@@ -52,6 +54,27 @@ function switchDark() {
     updateTheme();
 }
 
+function toggleFullscreen() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        document.documentElement.requestFullscreen();
+    }
+}
+
+function updateFullscreenControl() {
+    const isFullscreen = Boolean(document.fullscreenElement);
+    const label = isFullscreen ? "Exit fullscreen" : "Enter fullscreen";
+
+    fullscreenButton.setAttribute("aria-label", label);
+    fullscreenButton.title = label;
+    fullscreenIcon.innerHTML = isFullscreen
+        ? '<path d="M9 3v3a3 3 0 0 1-3 3H3m18 0h-3a3 3 0 0 1-3-3V3M3 15h3a3 3 0 0 1 3 3v3m12-6h-3a3 3 0 0 0-3 3v3"/>'
+        : '<path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/>';
+}
+
+document.addEventListener("fullscreenchange", updateFullscreenControl);
 updateClock();
 updateTheme();
+updateFullscreenControl();
 setInterval(updateClock, 1000);
