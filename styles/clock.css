@@ -1,0 +1,55 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    transition: background-color 0.25s, color 0.25s;
+}
+
+main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+
+#clock {
+font-size: clamp(3rem, 12vw, 9rem);
+font-weight: bold;
+font-variant-numeric: tabular-nums;
+}
+
+#dark-light {
+display: grid;
+place-items: center;
+padding: 10px;
+border: 1px solid currentColor;
+border-radius: 50%;
+background: transparent;
+color: inherit;
+cursor: pointer;
+transition: transform 0.2s, background-color 0.2s;
+}
+
+#dark-light:hover {
+background-color: #80808022;
+transform: rotate(15deg);
+}
+
+#theme-icon {
+width: 24px;
+height: 24px;
+fill: none;
+stroke: currentColor;
+stroke-width: 1.8;
+stroke-linecap: round;
+stroke-linejoin: round;
+}

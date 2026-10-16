@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Jippie Clock</title>
+    <link rel="stylesheet" href="./styles/clock.css">
+    <script src="./scripts/clock.js" defer></script>
+</head>
+<body>
+    <main>
+        <div id="clock">00:00:00</div>
+        <button id="dark-light" onclick="switchDark()" aria-label="Switch theme">
+            <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42
+                        m11.3 11.3 1.42 1.42M2 12h2m16 0h2
+                        M4.93 19.07l1.42-1.42m11.3-11.3
+                        1.42-1.42"/>
+            </svg>
+        </button>
+    </main>
+</body>
+</html>
