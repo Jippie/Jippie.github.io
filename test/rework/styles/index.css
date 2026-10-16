@@ -84,6 +84,13 @@ main #silvijf {
 main #silvijf:hover {
     transform: scale(1.05);
 }
+
+main img {
+    width: 128px;
+    height: auto;
+    object-fit: contain;
+}
+
 footer {
     display: flex;
     align-items: center;
