@@ -3,9 +3,12 @@ const darkswitch = document.getElementById("dark-light");
 const themeIcon = document.getElementById("theme-icon");
 const fullscreenButton = document.getElementById("fullscreen");
 const fullscreenIcon = document.getElementById("fullscreen-icon");
+const fontButton = document.getElementById("font");
+const fonts = ["monospace", "sans-serif", "serif"];
 
 let dark = localStorage.getItem("dark") !== "false";
 let backgroundIndex = Number(localStorage.getItem("backgroundIndex")) || 0;
+let fontIndex = Number(localStorage.getItem("fontIndex")) % fonts.length || 0;
 
 const themes = {
     light: {
@@ -54,6 +57,14 @@ function switchDark() {
     updateTheme();
 }
 
+function switchFont() {
+    fontIndex = (fontIndex + 1) % fonts.length;
+    document.body.style.fontFamily = fonts[fontIndex];
+    localStorage.setItem("fontIndex", fontIndex);
+    fontButton.title = `Change font (current: ${fonts[fontIndex]})`;
+    fontButton.setAttribute("aria-label", fontButton.title);
+}
+
 function toggleFullscreen() {
     if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -76,5 +87,8 @@ function updateFullscreenControl() {
 document.addEventListener("fullscreenchange", updateFullscreenControl);
 updateClock();
 updateTheme();
+document.body.style.fontFamily = fonts[fontIndex];
+fontButton.title = `Change font (current: ${fonts[fontIndex]})`;
+fontButton.setAttribute("aria-label", fontButton.title);
 updateFullscreenControl();
 setInterval(updateClock, 1000);

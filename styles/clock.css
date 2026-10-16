@@ -36,6 +36,7 @@ gap: 12px;
 
 #dark-light,
 #background,
+#font,
 #fullscreen {
 display: grid;
 place-items: center;
@@ -52,6 +53,7 @@ transition: background-color 0.2s, transform 0.2s;
 
 #dark-light:hover,
 #background:hover,
+#font:hover,
 #fullscreen:hover {
 background-color: #80808022;
 transform: scale(1.08);
@@ -59,12 +61,14 @@ transform: scale(1.08);
 
 #dark-light:active,
 #background:active,
+#font:active,
 #fullscreen:active {
 transform: scale(0.94);
 }
 
 #theme-icon,
 #background-icon,
+#font-icon,
 #fullscreen-icon {
 width: 24px;
 height: 24px;
