@@ -200,6 +200,10 @@ stroke-linejoin: round;
     cursor: pointer;
 }
 
+.settings-toggle[hidden] {
+    display: none;
+}
+
 .settings-toggle input {
     position: absolute;
     right: 0;

@@ -11,6 +11,8 @@ const fontDropdown = document.getElementById("font-dropdown");
 const analogClock = document.getElementById("analog-clock");
 const analogToggle = document.getElementById("analog-toggle");
 const dateToggle = document.getElementById("date-toggle");
+const numericSetting = document.getElementById("numeric-setting");
+const numericToggle = document.getElementById("numeric-toggle");
 const dateDisplay = document.getElementById("clock-date");
 const hourHand = document.getElementById("hour-hand");
 const minuteHand = document.getElementById("minute-hand");
@@ -64,6 +66,7 @@ let backgroundIndex = ((savedBackgroundIndex % backgroundNames.length) + backgro
 let fontIndex = Number(localStorage.getItem("fontIndex")) % fonts.length || 0;
 let analogMode = localStorage.getItem("analogMode") === "true";
 let showDate = localStorage.getItem("showDate") === "true";
+let numericDate = localStorage.getItem("numericDate") === "true";
 
 const themes = {
     light: {
@@ -84,12 +87,14 @@ function updateClock() {
     const hours = (now.getHours() % 12) + minutes / 60;
 
     clock.textContent = time;
-    dateDisplay.textContent = now.toLocaleDateString("en-GB", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-    });
+    dateDisplay.textContent = numericDate
+        ? now.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" })
+        : now.toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
     hourHand.style.transform = `translateX(-50%) rotate(${hours * 30}deg)`;
     minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6}deg)`;
     secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
@@ -100,11 +105,14 @@ function updateClock() {
 function updateDisplayOptions() {
     analogToggle.checked = analogMode;
     dateToggle.checked = showDate;
+    numericToggle.checked = numericDate;
+    numericSetting.hidden = !showDate;
     clock.hidden = analogMode;
     analogClock.hidden = !analogMode;
     dateDisplay.hidden = !showDate;
     localStorage.setItem("analogMode", analogMode);
     localStorage.setItem("showDate", showDate);
+    localStorage.setItem("numericDate", numericDate);
 }
 
 function updateSettingsButton() {
@@ -268,6 +276,11 @@ function updateFullscreenControl() {
 }
 
 document.addEventListener("fullscreenchange", updateFullscreenControl);
+document.addEventListener("click", (event) => {
+    if (!settingsMenu.contains(event.target)) {
+        settingsMenu.open = false;
+    }
+});
 settingsMenu.addEventListener("toggle", updateSettingsButton);
 analogToggle.addEventListener("change", () => {
     analogMode = analogToggle.checked;
@@ -276,6 +289,11 @@ analogToggle.addEventListener("change", () => {
 dateToggle.addEventListener("change", () => {
     showDate = dateToggle.checked;
     updateDisplayOptions();
+});
+numericToggle.addEventListener("change", () => {
+    numericDate = numericToggle.checked;
+    updateDisplayOptions();
+    updateClock();
 });
 updateDisplayOptions();
 updateClock();
