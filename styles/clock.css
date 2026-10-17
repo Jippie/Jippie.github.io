@@ -29,6 +29,75 @@ font-weight: bold;
 font-variant-numeric: tabular-nums;
 }
 
+#clock[hidden],
+#analog-clock[hidden],
+#clock-date[hidden] {
+    display: none;
+}
+
+.analog-clock {
+    position: relative;
+    width: min(64vw, 320px);
+    aspect-ratio: 1;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.analog-clock::before {
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background:
+        repeating-conic-gradient(currentColor 0deg 1deg, transparent 1deg 30deg),
+        repeating-conic-gradient(currentColor 0deg 0.4deg, transparent 0.4deg 6deg);
+    content: "";
+    mask: radial-gradient(circle closest-side, transparent 0 86%, #000 87%);
+    -webkit-mask: radial-gradient(circle closest-side, transparent 0 86%, #000 87%);
+}
+
+.analog-hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    z-index: 1;
+    border-radius: 999px;
+    background: currentColor;
+    transform-origin: 50% 100%;
+}
+
+.hour-hand {
+    width: 5px;
+    height: 25%;
+}
+
+.minute-hand {
+    width: 3px;
+    height: 35%;
+}
+
+.second-hand {
+    width: 1px;
+    height: 41%;
+}
+
+.analog-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    width: 12px;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    background: var(--page-background, #000);
+    transform: translate(-50%, -50%);
+}
+
+#clock-date {
+    font-size: 1.25rem;
+    text-align: center;
+}
+
 .has-image-background #clock {
     text-shadow: var(--clock-shadow);
 }
@@ -120,6 +189,61 @@ stroke-linejoin: round;
 
 .settings-label {
     font-size: 0.9rem;
+}
+
+.settings-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 34px;
+    cursor: pointer;
+}
+
+.settings-toggle input {
+    position: absolute;
+    right: 0;
+    width: 38px;
+    height: 22px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.toggle-track {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--page-background, #000) 70%, var(--page-text, #fff));
+    pointer-events: none;
+    transition: background-color 0.2s;
+}
+
+.toggle-track::after {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: currentColor;
+    content: "";
+    transition: transform 0.2s;
+}
+
+.settings-toggle input:checked + .toggle-track {
+    background: color-mix(in srgb, var(--page-background, #000) 50%, var(--page-text, #fff));
+}
+
+.settings-toggle input:checked + .toggle-track::after {
+    transform: translateX(16px);
+}
+
+.settings-toggle input:focus-visible + .toggle-track {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 
 .custom-dropdown {

@@ -15,6 +15,13 @@
 <body>
     <main>
         <div id="clock">00:00:00</div>
+        <div id="analog-clock" class="analog-clock" role="img" aria-label="Analog clock" hidden>
+            <span id="hour-hand" class="analog-hand hour-hand"></span>
+            <span id="minute-hand" class="analog-hand minute-hand"></span>
+            <span id="second-hand" class="analog-hand second-hand"></span>
+            <span class="analog-center"></span>
+        </div>
+        <time id="clock-date" hidden></time>
         <details id="settings-menu">
             <summary aria-label="Open settings" title="Open settings">
                 <svg id="settings-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -26,6 +33,16 @@
                 </svg>
             </summary>
             <div class="settings-panel" aria-label="Clock settings">
+                <label class="settings-toggle">
+                    <span>Analog clock</span>
+                    <input id="analog-toggle" type="checkbox">
+                    <span class="toggle-track" aria-hidden="true"></span>
+                </label>
+                <label class="settings-toggle">
+                    <span>Show date</span>
+                    <input id="date-toggle" type="checkbox">
+                    <span class="toggle-track" aria-hidden="true"></span>
+                </label>
                 <span class="settings-label" id="background-label">Background</span>
                 <details class="custom-dropdown" id="background-dropdown">
                     <summary class="dropdown-trigger" aria-labelledby="background-label background-value">

@@ -8,6 +8,13 @@ const fullscreenButton = document.getElementById("fullscreen");
 const fullscreenIcon = document.getElementById("fullscreen-icon");
 const backgroundDropdown = document.getElementById("background-dropdown");
 const fontDropdown = document.getElementById("font-dropdown");
+const analogClock = document.getElementById("analog-clock");
+const analogToggle = document.getElementById("analog-toggle");
+const dateToggle = document.getElementById("date-toggle");
+const dateDisplay = document.getElementById("clock-date");
+const hourHand = document.getElementById("hour-hand");
+const minuteHand = document.getElementById("minute-hand");
+const secondHand = document.getElementById("second-hand");
 const colorBackgroundNames = ["Default", "Mint", "Sky", "Amber", "Rose"];
 const imageBackgrounds = [
     {
@@ -33,6 +40,18 @@ const imageBackgrounds = [
         path: "./assets/Backgrounds/win11-dark.png",
         dark: { color: "#08090c", text: "#ffffff", overlay: "rgba(0, 0, 0, 0.12)", shadow: "0 2px 14px rgba(0, 0, 0, 0.65)" },
         light: { color: "#d9dce2", text: "#171a20", overlay: "rgba(244, 246, 250, 0.68)", shadow: "0 2px 14px rgba(255, 255, 255, 0.7)" }
+    },
+    {
+        name: "Forest",
+        path: "./assets/Backgrounds/forest.jpg",
+        dark: { color: "#12382f", text: "#f1fff8", overlay: "rgba(5, 27, 22, 0.46)", shadow: "0 2px 14px rgba(0, 0, 0, 0.62)" },
+        light: { color: "#dcebe1", text: "#193b30", overlay: "rgba(238, 249, 239, 0.68)", shadow: "0 2px 14px rgba(255, 255, 255, 0.72)" }
+    },
+    {
+        name: "Mountain",
+        path: "./assets/Backgrounds/mountain.jpg",
+        dark: { color: "#5f7f9c", text: "#000000", overlay: "rgba(0, 0, 0, 0.25)", shadow: "none" },
+        light: { color: "#e3eafa", text: "#1a304a", overlay: "rgba(239, 245, 255, 0.72)", shadow: "0 2px 14px rgba(255, 255, 255, 0.75)" }
     }
 ];
 const backgroundNames = [...colorBackgroundNames, ...imageBackgrounds.map((background) => background.name)];
@@ -43,6 +62,8 @@ let dark = localStorage.getItem("dark") !== "false";
 const savedBackgroundIndex = Number(localStorage.getItem("backgroundIndex")) || 0;
 let backgroundIndex = ((savedBackgroundIndex % backgroundNames.length) + backgroundNames.length) % backgroundNames.length;
 let fontIndex = Number(localStorage.getItem("fontIndex")) % fonts.length || 0;
+let analogMode = localStorage.getItem("analogMode") === "true";
+let showDate = localStorage.getItem("showDate") === "true";
 
 const themes = {
     light: {
@@ -56,8 +77,34 @@ const themes = {
 };
 
 function updateClock() {
-    clock.textContent = new Date().toLocaleTimeString("nl-NL");
-    document.title = `${clock.textContent} | ${pageTitle}`;
+    const now = new Date();
+    const time = now.toLocaleTimeString("nl-NL");
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes() + seconds / 60;
+    const hours = (now.getHours() % 12) + minutes / 60;
+
+    clock.textContent = time;
+    dateDisplay.textContent = now.toLocaleDateString("nl-NL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+    hourHand.style.transform = `translateX(-50%) rotate(${hours * 30}deg)`;
+    minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6}deg)`;
+    secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
+    analogClock.setAttribute("aria-label", `Analog clock, ${time}`);
+    document.title = `${time} | ${pageTitle}`;
+}
+
+function updateDisplayOptions() {
+    analogToggle.checked = analogMode;
+    dateToggle.checked = showDate;
+    clock.hidden = analogMode;
+    analogClock.hidden = !analogMode;
+    dateDisplay.hidden = !showDate;
+    localStorage.setItem("analogMode", analogMode);
+    localStorage.setItem("showDate", showDate);
 }
 
 function updateSettingsButton() {
@@ -222,6 +269,15 @@ function updateFullscreenControl() {
 
 document.addEventListener("fullscreenchange", updateFullscreenControl);
 settingsMenu.addEventListener("toggle", updateSettingsButton);
+analogToggle.addEventListener("change", () => {
+    analogMode = analogToggle.checked;
+    updateDisplayOptions();
+});
+dateToggle.addEventListener("change", () => {
+    showDate = dateToggle.checked;
+    updateDisplayOptions();
+});
+updateDisplayOptions();
 updateClock();
 updateTheme();
 updateFont(fontIndex);
