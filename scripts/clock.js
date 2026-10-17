@@ -15,7 +15,7 @@ const dateDisplay = document.getElementById("clock-date");
 const hourHand = document.getElementById("hour-hand");
 const minuteHand = document.getElementById("minute-hand");
 const secondHand = document.getElementById("second-hand");
-const colorBackgroundNames = ["Default", "Mint", "Sky", "Amber", "Rose"];
+const colorBackgroundNames = ["Default", "Green", "Blue", "Orange", "Red/Pink"];
 const imageBackgrounds = [
     {
         name: "Christmas",
@@ -84,7 +84,7 @@ function updateClock() {
     const hours = (now.getHours() % 12) + minutes / 60;
 
     clock.textContent = time;
-    dateDisplay.textContent = now.toLocaleDateString("nl-NL", {
+    dateDisplay.textContent = now.toLocaleDateString("en-GB", {
         weekday: "long",
         day: "numeric",
         month: "long",
