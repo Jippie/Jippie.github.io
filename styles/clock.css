@@ -6,6 +6,9 @@ body {
     margin: 0;
     min-height: 100vh;
     background: #000;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     color: #fff;
     font-family: monospace;
     transition: background-color 0.25s, color 0.25s;
@@ -24,6 +27,10 @@ main {
 font-size: clamp(3rem, 12vw, 9rem);
 font-weight: bold;
 font-variant-numeric: tabular-nums;
+}
+
+.has-image-background #clock {
+    text-shadow: var(--clock-shadow);
 }
 
 #settings-menu {
@@ -65,6 +72,17 @@ transform: scale(1.08);
 #settings-menu summary:active,
 .settings-actions button:active {
 transform: scale(0.94);
+}
+
+.settings-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.settings-actions button:disabled:hover,
+.settings-actions button:disabled:active {
+    background: transparent;
+    transform: none;
 }
 
 #settings-menu summary svg,
@@ -182,6 +200,9 @@ stroke-linejoin: round;
 }
 
 .dropdown-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     min-height: 36px;
     padding: 7px 9px;
@@ -194,9 +215,14 @@ stroke-linejoin: round;
     text-align: left;
 }
 
-.settings-panel option {
-    background: #fff;
-    color: #111;
+.background-option-swatch {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 28px;
+    border: 1px solid color-mix(in srgb, currentColor 60%, transparent);
+    border-radius: 4px;
+    background-position: center;
+    background-size: cover;
 }
 
 .settings-actions {
