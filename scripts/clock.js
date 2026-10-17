@@ -1,11 +1,16 @@
 const clock = document.getElementById("clock");
 const pageTitle = document.title;
+const settingsMenu = document.getElementById("settings-menu");
+const settingsButton = settingsMenu.querySelector("summary");
 const darkswitch = document.getElementById("dark-light");
 const themeIcon = document.getElementById("theme-icon");
 const fullscreenButton = document.getElementById("fullscreen");
 const fullscreenIcon = document.getElementById("fullscreen-icon");
-const fontButton = document.getElementById("font");
+const backgroundDropdown = document.getElementById("background-dropdown");
+const fontDropdown = document.getElementById("font-dropdown");
+const backgroundNames = ["Default", "Mint", "Sky", "Amber", "Rose"];
 const fonts = ["monospace", "sans-serif", "serif", "courier", "arial", "verdana", "georgia", "helvetica", "tahoma", "trebuchet ms"];
+const fontNames = ["Monospace", "Sans-serif", "Serif", "Courier", "Arial", "Verdana", "Georgia", "Helvetica", "Tahoma", "Trebuchet MS"];
 
 let dark = localStorage.getItem("dark") !== "false";
 let backgroundIndex = Number(localStorage.getItem("backgroundIndex")) || 0;
@@ -27,12 +32,22 @@ function updateClock() {
     document.title = `${clock.textContent} | ${pageTitle}`;
 }
 
+function updateSettingsButton() {
+    const label = settingsMenu.open ? "Close settings" : "Open settings";
+    settingsButton.setAttribute("aria-label", label);
+    settingsButton.title = label;
+}
+
 function updateTheme() {
     const theme = dark ? themes.dark : themes.light;
     const index = backgroundIndex % theme.backgrounds.length;
+    const backgroundColor = theme.backgrounds[index];
+    const textColor = theme.text[index];
 
-    document.body.style.backgroundColor = theme.backgrounds[index];
-    document.body.style.color = theme.text[index];
+    document.body.style.setProperty("--page-background", backgroundColor);
+    document.body.style.setProperty("--page-text", textColor);
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
 
     darkswitch.setAttribute(
         "aria-label",
@@ -46,10 +61,8 @@ function updateTheme() {
     localStorage.setItem("backgroundIndex", backgroundIndex);
 }
 
-function switchBackground() {
-    const theme = dark ? themes.dark : themes.light;
-
-    backgroundIndex = (backgroundIndex + 1) % theme.backgrounds.length;
+function switchBackground(index) {
+    backgroundIndex = index;
     updateTheme();
 }
 
@@ -59,13 +72,61 @@ function switchDark() {
     updateTheme();
 }
 
-function switchFont() {
-    fontIndex = (fontIndex + 1) % fonts.length;
+function updateFont(index) {
+    fontIndex = index;
     document.body.style.fontFamily = fonts[fontIndex];
     localStorage.setItem("fontIndex", fontIndex);
-    fontButton.title = `Change font (current: ${fonts[fontIndex]})`;
-    fontButton.setAttribute("aria-label", fontButton.title);
 }
+
+function setupDropdown(dropdown, names, selectedIndex, onChange, optionFonts = []) {
+    const selectedValue = dropdown.querySelector(".dropdown-value");
+    const optionsContainer = dropdown.querySelector(".dropdown-options");
+
+    names.forEach((name, index) => {
+        const option = document.createElement("button");
+        option.type = "button";
+        option.className = "dropdown-option";
+        option.dataset.value = index;
+        option.textContent = name;
+        option.setAttribute("aria-pressed", "false");
+
+        if (optionFonts[index]) {
+            option.style.fontFamily = optionFonts[index];
+        }
+
+        option.addEventListener("click", () => {
+            selectedIndex = index;
+            selectedValue.textContent = name;
+            dropdown.querySelector("summary").setAttribute("aria-label", `${name}`);
+            optionsContainer.querySelectorAll(".dropdown-option").forEach((item) => {
+                item.setAttribute("aria-pressed", String(item === option));
+            });
+            dropdown.open = false;
+            onChange(index);
+        });
+
+        optionsContainer.append(option);
+    });
+
+    selectedValue.textContent = names[selectedIndex] || names[0];
+    optionsContainer.children[selectedIndex]?.setAttribute("aria-pressed", "true");
+
+    dropdown.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            dropdown.open = false;
+            dropdown.querySelector("summary").focus();
+        }
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!dropdown.contains(event.target)) {
+            dropdown.open = false;
+        }
+    });
+}
+
+setupDropdown(backgroundDropdown, backgroundNames, backgroundIndex % backgroundNames.length, switchBackground);
+setupDropdown(fontDropdown, fontNames, fontIndex, updateFont, fonts);
 
 function toggleFullscreen() {
     if (document.fullscreenElement) {
@@ -87,10 +148,10 @@ function updateFullscreenControl() {
 }
 
 document.addEventListener("fullscreenchange", updateFullscreenControl);
+settingsMenu.addEventListener("toggle", updateSettingsButton);
 updateClock();
 updateTheme();
-document.body.style.fontFamily = fonts[fontIndex];
-fontButton.title = `Change font (current: ${fonts[fontIndex]})`;
-fontButton.setAttribute("aria-label", fontButton.title);
+updateFont(fontIndex);
 updateFullscreenControl();
+updateSettingsButton();
 setInterval(updateClock, 1000);
