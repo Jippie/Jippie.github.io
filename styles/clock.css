@@ -37,6 +37,7 @@ font-variant-numeric: tabular-nums;
 
 .analog-clock {
     position: relative;
+    flex: 0 0 auto;
     width: min(64vw, 320px);
     aspect-ratio: 1;
     border: 2px solid currentColor;
@@ -360,8 +361,25 @@ stroke-linejoin: round;
 }
 
 @media (max-width: 480px) {
+    #clock {
+        font-size: clamp(2rem, 12vw, 3.6rem);
+    }
+
+    #clock-date {
+        max-width: calc(100vw - 32px);
+    }
+
     #settings-menu {
         right: 16px;
         bottom: 16px;
+    }
+}
+
+@media (max-height: 520px) {
+    .settings-panel {
+        max-height: calc(100vh - 88px);
+        max-height: calc(100dvh - 88px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 }
