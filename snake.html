@@ -10,9 +10,7 @@
     </style>
 </head>
 <body>
-    <a href="./index.html" id="homebutton">
-        <button>Home</button>
-    </a>
+    <a href="./index.html" id="homebutton">Home</a>
 
     <h1 id="titel">Snake Game</h1>
 
@@ -20,9 +18,17 @@
         <div id="scorePanel">
             <p id="score">Score: 0</p>
             <p id="highScore">High score: 0</p>
-            <div id="instructies">Use the arrow keys to <br>control the snake</div>
+            <div id="instructies">Use the arrow keys or on-screen controls</div>
         </div>
-        <canvas id="gameCanvas" width="525" height="525"></canvas>
+        <div id="gameBoard">
+            <canvas id="gameCanvas" width="525" height="525"></canvas>
+            <div id="gameControls" aria-label="Snake controls">
+                <button type="button" data-direction="ArrowUp" aria-label="Move up">&uarr;</button>
+                <button type="button" data-direction="ArrowLeft" aria-label="Move left">&larr;</button>
+                <button type="button" data-direction="ArrowDown" aria-label="Move down">&darr;</button>
+                <button type="button" data-direction="ArrowRight" aria-label="Move right">&rarr;</button>
+            </div>
+        </div>
     </div>
 
     

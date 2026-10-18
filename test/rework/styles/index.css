@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     background: #000000;
@@ -32,7 +38,8 @@ header a {
     border-radius: 8px;
     transition: background 0.3s ease;
 }
-header button {
+header .home-button {
+    display: inline-block;
     background: #6f6f6f86;
     border: none;
     color: #ffffff;
@@ -42,13 +49,14 @@ header button {
     transition: background 0.3s ease;
     border: 1px solid #000000;
 }
-header button:hover {
+header .home-button:hover {
     background: rgba(255, 255, 255, 0.1);
 }
 main {
     color: #ffffff;
     margin: 2rem auto;
-    min-width: 500px; /* zorg dat main minstens de helft van het scherm is in de breedte */
+    min-width: 0;
+    width: min(900px, calc(100% - 2rem));
     max-width: 900px; /* vergroot eventueel zodat min-width kan werken op brede schermen */
     background: #1d3067;
     padding: 2rem;
@@ -60,7 +68,8 @@ main a {
     text-decoration: none;
     transition: all 0.5s ease;
 }
-main button {
+main .button {
+    display: inline-block;
     background: #4b72ff;
     color: #ffffff;
     border: none;
@@ -69,7 +78,7 @@ main button {
     cursor: pointer;
     transition: background 0.3s ease;
 }
-main button:hover {
+main .button:hover {
     background: #3a5bbf;
 }
 main p {

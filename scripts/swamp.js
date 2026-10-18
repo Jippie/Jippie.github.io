@@ -4,7 +4,7 @@ const entergrid = document.getElementById("entergrid")
         const audio = new Audio('https://github.com/polewolf/swamp/raw/refs/heads/main/what-are-you-doing-in-my-swamp.mp3');
 
         enter.addEventListener("click", () => {
-            audio.play();
+            audio.play().catch(() => {});
             entergrid.style.display = "none"
             page.forEach((i) => {
                 i.style.display = "block"

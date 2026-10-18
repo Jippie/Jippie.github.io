@@ -99,3 +99,11 @@ main a:hover {
 #friendsite {
     margin-top: 15px;
 }
+
+@media (max-width: 480px) {
+    h1 {
+        margin: 1rem;
+        font-size: 2rem;
+        overflow-wrap: anywhere;
+    }
+}

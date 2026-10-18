@@ -2,13 +2,14 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreElement = document.getElementById("score");
 const highScoreElement = document.getElementById("highScore");
+const controlsElement = document.getElementById("gameControls");
 
 const highScoreKey = "snakeHighScore";
 let highScore = Number(localStorage.getItem(highScoreKey)) || 0;
 
 function updateScoreDisplay() {
-    scoreElement.innerHTML = "Score: " + score;
-    highScoreElement.innerHTML = "High score: " + highScore;
+    scoreElement.textContent = "Score: " + score;
+    highScoreElement.textContent = "High score: " + highScore;
 }
     
 // Game instellingen
@@ -31,10 +32,21 @@ var pending = false;
     
 // Spawn voedsel op een willekeurige locatie
 function spawnFood() {
-    return {
-        x: Math.floor(Math.random() * gridCount),
-        y: Math.floor(Math.random() * gridCount),
-    };
+    const availableCells = [];
+
+    for (let row = 0; row < gridCount; row++) {
+        for (let column = 0; column < gridCount; column++) {
+            if (!snake.some((segment) => segment.x === column && segment.y === row)) {
+                availableCells.push({ x: column, y: row });
+            }
+        }
+    }
+
+    if (availableCells.length === 0) {
+        return null;
+    }
+
+    return availableCells[Math.floor(Math.random() * availableCells.length)];
 }
     
 // Teken een vakje
@@ -48,6 +60,8 @@ function updateGame() {
     if (!gameStarted) return; // Update alleen als het spel gestart is
     
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+    const eatingFood = food && head.x === food.x && head.y === food.y;
+    const collisionSegments = eatingFood ? snake : snake.slice(0, -1);
     
     // Controleer botsingen met randen of jezelf
     if (
@@ -55,7 +69,7 @@ function updateGame() {
         head.y < 0 || 
         head.x >= gridCount || 
         head.y >= gridCount ||
-        snake.some(segment => segment.x === head.x && segment.y === head.y)
+        collisionSegments.some(segment => segment.x === head.x && segment.y === head.y)
     ) {
         gameOverMessage = `Game over! Your score is ${score}`;
         gameStarted = false;
@@ -72,19 +86,27 @@ function updateGame() {
         return;
     }
     
-    // Controleer of de slang voedsel eet
-    if (head.x === food.x && head.y === food.y) {
+    if (eatingFood) {
         score++;
         if (score > highScore) {
             highScore = score;
             localStorage.setItem(highScoreKey, highScore);
         }
-        food = spawnFood();
     } else {
         snake.pop(); // Verwijder de staart
     }
     
     snake.unshift(head); // Voeg nieuwe kop toe
+
+    if (eatingFood) {
+        food = spawnFood();
+        if (!food) {
+            gameOverMessage = "You win!";
+            gameStarted = false;
+            direction = { x: 0, y: 0 };
+            gameOverTimer = setTimeout(resetGame, 1500);
+        }
+    }
 }
     
 // Reset het spel na Game Over
@@ -109,14 +131,14 @@ function drawGame() {
     pending = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    for (y = 0; y < gridCount; y++) {
-        for (x = 0; x < gridCount; x++) {
-            if (y % 2 == x % 2) drawBox(x, y, "#105010");
+    for (let row = 0; row < gridCount; row++) {
+        for (let column = 0; column < gridCount; column++) {
+            if (row % 2 === column % 2) drawBox(column, row, "#105010");
         }
     }
 
     // Teken voedsel
-    drawBox(food.x, food.y, "red");
+    if (food) drawBox(food.x, food.y, "red");
     
     // Teken slang
     snake.forEach(segment => drawBox(segment.x, segment.y, "green"));
@@ -133,26 +155,36 @@ function drawGame() {
 }
     
 // Besturing van de slang
+const directions = {
+    ArrowUp: { x: 0, y: -1 },
+    ArrowDown: { x: 0, y: 1 },
+    ArrowLeft: { x: -1, y: 0 },
+    ArrowRight: { x: 1, y: 0 }
+};
+
+function changeDirection(nextDirection) {
+    if (pending || gameOverMessage) return;
+    if (
+        (nextDirection.x !== 0 && direction.x !== 0) ||
+        (nextDirection.y !== 0 && direction.y !== 0)
+    ) return;
+
+    direction = nextDirection;
+    pending = true;
+    gameStarted = true;
+}
+
 document.addEventListener("keydown", event => {
-    if (pending == false) {
-    if (event.key === "ArrowUp" && direction.y === 0) {
-        direction = { x: 0, y: -1 };
-        pending = true;
-        gameStarted = true; // Start het spel
-    } else if (event.key === "ArrowDown" && direction.y === 0) {
-        direction = { x: 0, y: 1 };
-        pending = true;
-        gameStarted = true; // Start het spel
-    } else if (event.key === "ArrowLeft" && direction.x === 0) {
-        direction = { x: -1, y: 0 };
-        pending = true;
-        gameStarted = true; // Start het spel
-    } else if (event.key === "ArrowRight" && direction.x === 0) {
-        direction = { x: 1, y: 0 };
-        pending = true;
-        gameStarted = true; // Start het spel
-    }
-    }
+    const nextDirection = directions[event.key];
+    if (!nextDirection) return;
+
+    event.preventDefault();
+    changeDirection(nextDirection);
+});
+
+controlsElement.addEventListener("click", event => {
+    const button = event.target.closest("[data-direction]");
+    if (button) changeDirection(directions[button.dataset.direction]);
 });
     
 // Game loop

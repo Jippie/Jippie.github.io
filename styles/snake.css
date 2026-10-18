@@ -13,9 +13,6 @@ body {
     left: 1rem;
     top: 1rem;
     vertical-align: middle;
-}
-
-#homebutton button {
     background-color: #2a51df;
     border: 4px solid #000000;
     color: white;
@@ -27,7 +24,7 @@ body {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-#homebutton button:hover {
+#homebutton:hover {
     background-color: #1111aa;
     transform: scale(1.05);
 }
@@ -54,18 +51,56 @@ body {
     margin: 20px auto;
 }
 
+#gameBoard {
+    width: min(525px, calc(100vw - 32px));
+}
+
 #scorePanel {
     text-align: left;
     min-width: 140px;
 }
 
 #gameCanvas {
+    box-sizing: border-box;
     border: 4px solid #000000;
     background-color: #0c400c;
     display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
+#gameControls {
+    display: grid;
+    grid-template-areas: ". up ." "left down right";
+    grid-template-columns: repeat(3, 48px);
+    gap: 6px;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+#gameControls button {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #8095df;
+    border-radius: 8px;
+    background: #1d3067;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#gameControls button:active {
+    background: #2a51df;
+}
+
+#gameControls [data-direction="ArrowUp"] { grid-area: up; }
+#gameControls [data-direction="ArrowLeft"] { grid-area: left; }
+#gameControls [data-direction="ArrowDown"] { grid-area: down; }
+#gameControls [data-direction="ArrowRight"] { grid-area: right; }
 
 #score {
     text-align: left;
@@ -77,4 +112,21 @@ body {
     text-align: left;
     color: #ffffff;
     margin: 0.25rem 0 0;
+}
+
+@media (max-width: 760px) {
+    #gameArea {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #scorePanel {
+        width: min(525px, calc(100vw - 32px));
+    }
+}
+
+@media (max-width: 480px) {
+    #titel {
+        margin-top: 4rem;
+    }
 }

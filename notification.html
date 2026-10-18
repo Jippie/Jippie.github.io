@@ -1,33 +1,44 @@
-<html>
-
-<head></head>
-
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Notification test</title>
+</head>
 <body>
-
-
-    <button>click</button>
-
+    <button id="notification-button" type="button">Send notification</button>
+    <p id="notification-status" role="status" aria-live="polite"></p>
     <script>
-        const button = document.querySelector("button")
+        const notificationButton = document.getElementById("notification-button");
+        const notificationStatus = document.getElementById("notification-status");
 
-        function sendNotification() {
+        notificationButton.addEventListener("click", async () => {
+            if (!("Notification" in window)) {
+                notificationStatus.textContent = "Notifications are not supported in this browser.";
+                return;
+            }
 
-            var notification = new Notification("Notification", {
-                body: "hi",
-            })
-            notification.addEventListener("close", sendNotification)
+            try {
+                let permission = Notification.permission;
+                if (permission === "default") {
+                    permission = await Notification.requestPermission();
+                }
 
-        }
-        Notification.requestPermission().then(perm => {
-            sendNotification()
-        })
-        
-        button.addEventListener("click", () => {
-            sendNotification()
-        })
+                if (permission !== "granted") {
+                    notificationStatus.textContent = "Notification permission was not granted.";
+                    return;
+                }
+
+                const notification = new Notification("Notification", { body: "hi" });
+                notification.addEventListener("close", () => {
+                    notificationStatus.textContent = "Notification closed.";
+                });
+                notificationStatus.textContent = "Notification sent.";
+            } catch {
+                notificationStatus.textContent = "The notification could not be sent.";
+            }
+        });
     </script>
-
-
 </body>
 
 </html>

@@ -38,3 +38,14 @@ body {
     color: white;
     margin-top: 20px;
 }
+
+#shrek {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 480px) {
+    #buiten {
+        font-size: 2rem;
+    }
+}
