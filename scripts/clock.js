@@ -38,8 +38,8 @@ const imageBackgrounds = [
         light: { color: "#e4ebf6", text: "#172844", overlay: "rgba(238, 245, 255, 0.52)", shadow: "0 2px 14px rgba(255, 255, 255, 0.65)" }
     },
     {
-        name: "Windows 11",
-        path: "./assets/Backgrounds/win11-dark.png",
+        name: "Dark",
+        path: "./assets/Backgrounds/dark.jpg",
         dark: { color: "#08090c", text: "#ffffff", overlay: "rgba(0, 0, 0, 0.12)", shadow: "0 2px 14px rgba(0, 0, 0, 0.65)" },
         light: { color: "#d9dce2", text: "#171a20", overlay: "rgba(244, 246, 250, 0.68)", shadow: "0 2px 14px rgba(255, 255, 255, 0.7)" }
     },
@@ -231,6 +231,31 @@ function setupDropdown(dropdown, names, selectedIndex, onChange, optionFonts = [
 
     selectedValue.textContent = names[selectedIndex] || names[0];
     optionsContainer.children[selectedIndex]?.setAttribute("aria-pressed", "true");
+
+    const positionOptions = () => {
+        if (!dropdown.open) {
+            dropdown.classList.remove("options-below");
+            optionsContainer.style.removeProperty("max-height");
+            return;
+        }
+
+        const panel = settingsMenu.querySelector(".settings-panel");
+        const panelBounds = panel.getBoundingClientRect();
+        const triggerBounds = dropdown.querySelector("summary").getBoundingClientRect();
+        const panelScrolls = getComputedStyle(panel).overflowY !== "visible";
+        const topLimit = panelScrolls ? panelBounds.top : 0;
+        const bottomLimit = panelScrolls ? panelBounds.bottom : window.innerHeight;
+        const spaceAbove = Math.max(0, triggerBounds.top - topLimit - 6);
+        const spaceBelow = Math.max(0, bottomLimit - triggerBounds.bottom - 6);
+        const openBelow = spaceBelow > spaceAbove;
+        const availableSpace = openBelow ? spaceBelow : spaceAbove;
+
+        dropdown.classList.toggle("options-below", openBelow);
+        optionsContainer.style.maxHeight = `${Math.min(240, window.innerHeight * 0.4, availableSpace)}px`;
+    };
+
+    dropdown.addEventListener("toggle", positionOptions);
+    window.addEventListener("resize", positionOptions);
 
     dropdown.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
