@@ -1,5 +1,26 @@
 * {
     box-sizing: border-box;
+    scrollbar-color: color-mix(in srgb, var(--page-text, #fff) 45%, var(--page-background, #000)) var(--page-background, #000);
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--page-background, #000);
+}
+
+*::-webkit-scrollbar-thumb {
+    border: 2px solid var(--page-background, #000);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--page-text, #fff) 45%, var(--page-background, #000));
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--page-text, #fff) 65%, var(--page-background, #000));
 }
 
 body {

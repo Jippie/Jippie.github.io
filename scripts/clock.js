@@ -248,6 +248,8 @@ function updateTheme() {
         document.body.classList.remove("has-image-background");
     }
 
+    document.documentElement.style.setProperty("--page-background", backgroundColor);
+    document.documentElement.style.setProperty("--page-text", textColor);
     document.body.style.setProperty("--page-background", backgroundColor);
     document.body.style.setProperty("--page-text", textColor);
     document.body.style.backgroundColor = backgroundColor;
