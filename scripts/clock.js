@@ -177,6 +177,7 @@ function playTimerAlert() {
 }
 
 function updateToolControls() {
+    document.body.classList.toggle("stopwatch-mode", activeMode === "stopwatch");
     timerControls.hidden = activeMode !== "timer";
     stopwatchControls.hidden = activeMode !== "stopwatch";
     stopwatchDisplayControls.hidden = activeMode !== "stopwatch";
