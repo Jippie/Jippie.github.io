@@ -16,6 +16,12 @@
 <body>
     <main>
         <div id="clock">00:00:00</div>
+        <div id="stopwatch-display-controls" class="stopwatch-display-controls" hidden>
+            <button type="button" data-stopwatch-action="start">Start</button>
+            <button type="button" data-stopwatch-action="lap" disabled>Lap</button>
+            <button type="button" data-stopwatch-action="reset">Reset</button>
+        </div>
+        <ol id="stopwatch-display-laps" class="stopwatch-laps" aria-label="Stopwatch laps" hidden></ol>
         <div id="analog-clock" class="analog-clock" role="img" aria-label="Analog clock" hidden>
             <span id="hour-hand" class="analog-hand hour-hand"></span>
             <span id="minute-hand" class="analog-hand minute-hand"></span>
@@ -34,6 +40,32 @@
                 </svg>
             </summary>
             <div class="settings-panel" aria-label="Clock settings">
+                <span class="settings-label" id="mode-label">Display</span>
+                <div class="mode-selector" role="group" aria-labelledby="mode-label">
+                    <button class="mode-option" type="button" data-mode="clock" aria-pressed="true">Clock</button>
+                    <button class="mode-option" type="button" data-mode="timer" aria-pressed="false">Timer</button>
+                    <button class="mode-option" type="button" data-mode="stopwatch" aria-pressed="false">Stopwatch</button>
+                </div>
+                <div id="timer-controls" class="tool-controls" hidden>
+                    <label class="settings-label" for="timer-minutes">Duration</label>
+                    <div class="duration-inputs">
+                        <input id="timer-minutes" type="number" min="0" max="5999" value="5" aria-label="Timer minutes">
+                        <span aria-hidden="true">:</span>
+                        <input id="timer-seconds" type="number" min="0" max="59" value="0" aria-label="Timer seconds">
+                    </div>
+                    <div class="tool-actions">
+                        <button id="timer-start" type="button">Start</button>
+                        <button id="timer-reset" type="button">Reset</button>
+                    </div>
+                </div>
+                <div id="stopwatch-controls" class="tool-controls" hidden>
+                    <div class="tool-actions">
+                        <button id="stopwatch-start" type="button" data-stopwatch-action="start">Start</button>
+                        <button id="stopwatch-lap" type="button" data-stopwatch-action="lap" disabled>Lap</button>
+                        <button id="stopwatch-reset" type="button" data-stopwatch-action="reset">Reset</button>
+                    </div>
+                    <ol id="stopwatch-laps" class="stopwatch-laps" aria-label="Stopwatch laps"></ol>
+                </div>
                 <label class="settings-toggle">
                     <span>Analog clock</span>
                     <input id="analog-toggle" type="checkbox">
@@ -63,18 +95,23 @@
                     </summary>
                     <div class="dropdown-options" aria-label="Font options"></div>
                 </details>
-                <div class="settings-actions">
-                    <button id="dark-light" onclick="switchDark()" aria-label="Switch theme" title="Switch theme">
-                        <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <circle cx="12" cy="12" r="4"/>
-                            <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
-                        </svg>
-                    </button>
-                    <button id="fullscreen" aria-label="Enter fullscreen" title="Enter fullscreen" onclick="toggleFullscreen()">
-                        <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/>
-                        </svg>
-                    </button>
+                <div class="settings-footer">
+                    <div class="settings-actions">
+                        <button id="dark-light" onclick="switchDark()" aria-label="Switch theme" title="Switch theme">
+                            <svg id="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="4"/>
+                                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l-1.42-1.42m11.3-11.3 1.42-1.42"/>
+                            </svg>
+                        </button>
+                        <button id="fullscreen" aria-label="Enter fullscreen" title="Enter fullscreen" onclick="toggleFullscreen()">
+                            <svg id="fullscreen-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <a id="source-code" href="https://github.com/Jippie/Jippie.github.io" target="_blank" rel="noopener noreferrer" aria-label="Source code" title="Source code">
+                        <img src="./assets/github.png" alt="">
+                    </a>
                 </div>
             </div>
         </details>

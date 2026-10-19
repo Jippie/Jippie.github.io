@@ -14,6 +14,27 @@ body {
     transition: background-color 0.25s, color 0.25s;
 }
 
+body.timer-flash::after {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(255, 0, 0, 0.62);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    animation: timer-screen-flash 0.7s ease-out;
+}
+
+@keyframes timer-screen-flash {
+    0%, 100% {
+        opacity: 0;
+    }
+
+    20%, 55% {
+        opacity: 1;
+    }
+}
+
 main {
     min-height: 100vh;
     display: flex;
@@ -100,6 +121,119 @@ font-variant-numeric: tabular-nums;
     text-align: center;
 }
 
+.mode-selector,
+.tool-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.mode-option,
+.tool-actions button {
+    min-height: 36px;
+    padding: 6px 10px;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+}
+
+.mode-option {
+    flex: 1;
+    padding-inline: 5px;
+    font-size: 0.85rem;
+}
+
+.mode-option[aria-pressed="true"] {
+    background: color-mix(in srgb, var(--page-background, #000) 65%, var(--page-text, #fff));
+}
+
+.tool-controls {
+    display: grid;
+    gap: 8px;
+    padding-block: 4px;
+}
+
+.tool-controls[hidden] {
+    display: none;
+}
+
+.duration-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.duration-inputs input {
+    width: 72px;
+    min-height: 38px;
+    border: 1px solid currentColor;
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--page-background, #000) 76%, var(--page-text, #fff));
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.tool-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.stopwatch-display-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.stopwatch-display-controls[hidden] {
+    display: none;
+}
+
+.stopwatch-display-controls button {
+    min-width: 84px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--page-background, #000) 76%, var(--page-text, #fff));
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+}
+
+.stopwatch-display-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.stopwatch-laps {
+    display: grid;
+    gap: 3px;
+    max-height: 112px;
+    overflow-y: auto;
+    margin: 0;
+    padding-left: 28px;
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.stopwatch-laps:empty {
+    display: none;
+}
+
+.stopwatch-laps[hidden] {
+    display: none;
+}
+
+#stopwatch-display-laps {
+    width: min(320px, calc(100vw - 32px));
+    max-height: min(180px, 30vh);
+    padding-left: 32px;
+}
+
 .has-image-background #clock {
     text-shadow: var(--clock-shadow);
 }
@@ -112,7 +246,8 @@ font-variant-numeric: tabular-nums;
 }
 
 #settings-menu summary,
-.settings-actions button {
+.settings-actions button,
+#source-code {
 display: grid;
 place-items: center;
 width: 46px;
@@ -135,13 +270,15 @@ transition: background-color 0.2s, transform 0.2s;
 }
 
 #settings-menu summary:hover,
-.settings-actions button:hover {
+.settings-actions button:hover,
+#source-code:hover {
 background-color: #80808022;
 transform: scale(1.08);
 }
 
 #settings-menu summary:active,
-.settings-actions button:active {
+.settings-actions button:active,
+#source-code:active {
 transform: scale(0.94);
 }
 
@@ -158,7 +295,8 @@ transform: scale(0.94);
 
 #settings-menu summary svg,
 #theme-icon,
-#fullscreen-icon {
+#fullscreen-icon,
+#source-code img {
 width: 24px;
 height: 24px;
 fill: none;
@@ -360,10 +498,30 @@ stroke-linejoin: round;
     background-size: cover;
 }
 
+.settings-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
 .settings-actions {
     display: flex;
     gap: 10px;
-    margin-top: 4px;
+}
+
+#source-code {
+    color: inherit;
+    text-decoration: none;
+}
+
+#source-code:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+#source-code img {
+    object-fit: contain;
 }
 
 @media (max-width: 480px) {

@@ -17,6 +17,19 @@ const dateDisplay = document.getElementById("clock-date");
 const hourHand = document.getElementById("hour-hand");
 const minuteHand = document.getElementById("minute-hand");
 const secondHand = document.getElementById("second-hand");
+const modeOptions = document.querySelectorAll(".mode-option");
+const timerControls = document.getElementById("timer-controls");
+const timerMinutes = document.getElementById("timer-minutes");
+const timerSeconds = document.getElementById("timer-seconds");
+const timerStartButton = document.getElementById("timer-start");
+const timerResetButton = document.getElementById("timer-reset");
+const stopwatchControls = document.getElementById("stopwatch-controls");
+const stopwatchDisplayControls = document.getElementById("stopwatch-display-controls");
+const stopwatchStartButtons = document.querySelectorAll('[data-stopwatch-action="start"]');
+const stopwatchLapButtons = document.querySelectorAll('[data-stopwatch-action="lap"]');
+const stopwatchResetButtons = document.querySelectorAll('[data-stopwatch-action="reset"]');
+const stopwatchLapLists = document.querySelectorAll(".stopwatch-laps");
+const stopwatchDisplayLaps = document.getElementById("stopwatch-display-laps");
 const colorBackgroundNames = ["Default", "Green", "Blue", "Orange", "Red/Pink"];
 const imageBackgrounds = [
     {
@@ -67,6 +80,13 @@ let fontIndex = Number(localStorage.getItem("fontIndex")) % fonts.length || 0;
 let analogMode = localStorage.getItem("analogMode") === "true";
 let showDate = localStorage.getItem("showDate") === "true";
 let numericDate = localStorage.getItem("numericDate") === "true";
+let activeMode = "clock";
+let timerRemaining = 300000;
+let timerDeadline = 0;
+let timerRunning = false;
+let stopwatchElapsed = 0;
+let stopwatchStartedAt = 0;
+let stopwatchRunning = false;
 
 const themes = {
     light: {
@@ -82,6 +102,31 @@ const themes = {
 function updateClock() {
     const now = new Date();
     const time = now.toLocaleTimeString("nl-NL");
+
+    if (timerRunning) {
+        timerRemaining = Math.max(0, timerDeadline - Date.now());
+        if (timerRemaining === 0) {
+            timerRunning = false;
+            timerStartButton.textContent = "Start";
+            playTimerAlert();
+            document.body.classList.add("timer-flash");
+            window.setTimeout(() => document.body.classList.remove("timer-flash"), 700);
+        }
+    }
+
+    if (activeMode === "timer") {
+        clock.textContent = formatDuration(timerRemaining, false);
+        document.title = `${clock.textContent} | Timer`;
+        return;
+    }
+
+    if (activeMode === "stopwatch") {
+        const elapsed = stopwatchElapsed + (stopwatchRunning ? performance.now() - stopwatchStartedAt : 0);
+        clock.textContent = formatDuration(elapsed, true);
+        document.title = `${clock.textContent} | Stopwatch`;
+        return;
+    }
+
     const seconds = now.getSeconds();
     const minutes = now.getMinutes() + seconds / 60;
     const hours = (now.getHours() % 12) + minutes / 60;
@@ -102,14 +147,65 @@ function updateClock() {
     document.title = `${time} | ${pageTitle}`;
 }
 
+function formatDuration(milliseconds, tenths) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    const base = [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
+    return tenths ? `${base}.${Math.floor((milliseconds % 1000) / 100)}` : base;
+}
+
+function getTimerDuration() {
+    const minutes = Math.min(5999, Math.max(0, Number(timerMinutes.value) || 0));
+    const seconds = Math.min(59, Math.max(0, Number(timerSeconds.value) || 0));
+    return (minutes * 60 + seconds) * 1000;
+}
+
+function playTimerAlert() {
+    const audioContext = new AudioContext();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.frequency.value = 880;
+    gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.8);
+    oscillator.addEventListener("ended", () => audioContext.close(), { once: true });
+}
+
+function updateToolControls() {
+    timerControls.hidden = activeMode !== "timer";
+    stopwatchControls.hidden = activeMode !== "stopwatch";
+    stopwatchDisplayControls.hidden = activeMode !== "stopwatch";
+    stopwatchDisplayLaps.hidden = activeMode !== "stopwatch";
+    timerStartButton.textContent = timerRunning ? "Pause" : "Start";
+    stopwatchStartButtons.forEach((button) => {
+        button.textContent = stopwatchRunning ? "Pause" : "Start";
+    });
+    stopwatchLapButtons.forEach((button) => {
+        button.disabled = !stopwatchRunning;
+    });
+}
+
+function selectMode(mode) {
+    activeMode = mode;
+    modeOptions.forEach((option) => option.setAttribute("aria-pressed", String(option.dataset.mode === mode)));
+    updateDisplayOptions();
+    updateToolControls();
+    updateClock();
+}
+
 function updateDisplayOptions() {
     analogToggle.checked = analogMode;
     dateToggle.checked = showDate;
     numericToggle.checked = numericDate;
     numericSetting.hidden = !showDate;
-    clock.hidden = analogMode;
-    analogClock.hidden = !analogMode;
-    dateDisplay.hidden = !showDate;
+    clock.hidden = activeMode === "clock" && analogMode;
+    analogClock.hidden = activeMode !== "clock" || !analogMode;
+    dateDisplay.hidden = activeMode !== "clock" || !showDate;
     localStorage.setItem("analogMode", analogMode);
     localStorage.setItem("showDate", showDate);
     localStorage.setItem("numericDate", numericDate);
@@ -307,6 +403,71 @@ document.addEventListener("click", (event) => {
     }
 });
 settingsMenu.addEventListener("toggle", updateSettingsButton);
+modeOptions.forEach((option) => option.addEventListener("click", () => selectMode(option.dataset.mode)));
+timerStartButton.addEventListener("click", () => {
+    if (timerRunning) {
+        timerRemaining = Math.max(0, timerDeadline - Date.now());
+        timerRunning = false;
+    } else {
+        if (timerRemaining <= 0) {
+            const minutes = Math.max(0, Number(timerMinutes.value) || 0);
+            const seconds = Math.min(59, Math.max(0, Number(timerSeconds.value) || 0));
+            timerRemaining = (minutes * 60 + seconds) * 1000;
+        }
+        if (timerRemaining > 0) {
+            timerDeadline = Date.now() + timerRemaining;
+            timerRunning = true;
+        }
+    }
+    updateToolControls();
+    updateClock();
+});
+timerResetButton.addEventListener("click", () => {
+    timerRunning = false;
+    timerRemaining = getTimerDuration();
+    timerStartButton.textContent = "Start";
+    updateClock();
+});
+timerMinutes.addEventListener("input", () => {
+    if (!timerRunning) {
+        timerRemaining = getTimerDuration();
+        updateClock();
+    }
+});
+timerSeconds.addEventListener("input", () => {
+    if (!timerRunning) {
+        timerRemaining = getTimerDuration();
+        updateClock();
+    }
+});
+stopwatchStartButtons.forEach((button) => button.addEventListener("click", () => {
+    if (stopwatchRunning) {
+        stopwatchElapsed += performance.now() - stopwatchStartedAt;
+        stopwatchRunning = false;
+    } else {
+        stopwatchStartedAt = performance.now();
+        stopwatchRunning = true;
+    }
+    updateToolControls();
+    updateClock();
+}));
+stopwatchLapButtons.forEach((button) => button.addEventListener("click", () => {
+    if (stopwatchRunning) {
+        const elapsed = stopwatchElapsed + performance.now() - stopwatchStartedAt;
+        stopwatchLapLists.forEach((list) => {
+            const lap = document.createElement("li");
+            lap.textContent = formatDuration(elapsed, true);
+            list.prepend(lap);
+        });
+    }
+}));
+stopwatchResetButtons.forEach((button) => button.addEventListener("click", () => {
+    stopwatchRunning = false;
+    stopwatchElapsed = 0;
+    stopwatchLapLists.forEach((list) => list.replaceChildren());
+    updateToolControls();
+    updateClock();
+}));
 analogToggle.addEventListener("change", () => {
     analogMode = analogToggle.checked;
     updateDisplayOptions();
@@ -321,9 +482,10 @@ numericToggle.addEventListener("change", () => {
     updateClock();
 });
 updateDisplayOptions();
+updateToolControls();
 updateClock();
 updateTheme();
 updateFont(fontIndex);
 updateFullscreenControl();
 updateSettingsButton();
-setInterval(updateClock, 1000);
+setInterval(updateClock, 100);
